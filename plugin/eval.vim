@@ -1,30 +1,30 @@
-fun! EvalVimScriptRegion(s,e)
+function! s:EvalVimLRegion(s,e)
   let lines = getline(a:s,a:e)
   let file = tempname()
-  cal writefile(lines,file)
-  redir @e
-  silent exec ':source '.file
-  cal delete(file)
-  redraw
-  redir END
-  echo "Region evaluated."
+  call writefile(lines,file)
+  execute ':source '.file
+  call delete(file)
+endfunction
 
-  if strlen(getreg('e')) > 0
-    10new
-    redraw
-    silent file "EvalResult"
-    setlocal noswapfile  buftype=nofile bufhidden=wipe
-    setlocal nobuflisted nowrap cursorline nonumber fdc=0
-    " syntax init
-    set filetype="eval"
-    syn match ErrorLine +^E\d\+:.*$+
-    hi link ErrorLine Error
-    silent $put =@e
+command! -range EvalVimL  :call s:EvalVimLRegion(<line1>,<line2>)
+nnoremap <silent> <Plug>eval_viml :EvalVimL<CR>
+vnoremap <silent> <Plug>eval_viml_region :EvalVimL<CR>
+
+function! s:initVariable(var, value)
+  if !exists(a:var)
+    exec 'let ' . a:var . ' = ' . "'" . substitute(a:value, "'", "''", "g") . "'"
+    return 1
   endif
-endf
+  return 0
+endfunction
 
-augroup VimEval
-  au!
-  au filetype vim :command! -range Eval  :cal EvalVimScriptRegion(<line1>,<line2>)
-  au filetype vim :vnoremap <silent> e   :Eval<CR>
-augroup END
+call s:initVariable("g:eval_viml_n", "<C-c>")
+call s:initVariable("g:eval_viml_v", "<C-c>")
+
+if !exists('g:eval_viml_map_keys') || g:eval_viml_map_keys
+  augroup EvalVimL
+    autocmd!
+    execute 'autocmd filetype vim :nmap <silent> ' . g:eval_viml_n . ' <Plug>eval_viml'
+    execute 'autocmd filetype vim :vmap <silent> ' . g:eval_viml_v . ' <Plug>eval_viml_region'
+  augroup END
+endif
