@@ -24,7 +24,7 @@ call s:initVariable("g:eval_viml_v", "<C-c>")
 if !exists('g:eval_viml_map_keys') || g:eval_viml_map_keys
   augroup EvalVimL
     autocmd!
-    execute 'autocmd filetype vim :nmap <silent> ' . g:eval_viml_n . ' <Plug>eval_viml'
-    execute 'autocmd filetype vim :vmap <silent> ' . g:eval_viml_v . ' <Plug>eval_viml_region'
+    execute 'autocmd FileType vim :nmap <silent> ' . g:eval_viml_n . ' <Plug>eval_viml'
+    execute 'autocmd FileType vim :vmap <silent> ' . g:eval_viml_v . ' <Plug>eval_viml_region'
   augroup END
 endif
