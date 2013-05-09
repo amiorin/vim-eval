@@ -13,3 +13,7 @@ let g:eval_viml_map_keys = 0
 nmap <silent> <C-c> <Plug>eval_viml
 vmap <silent> <C-c> <Plug>eval_viml_region
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/amiorin/vim-eval/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
